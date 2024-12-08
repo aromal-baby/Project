@@ -1,86 +1,38 @@
-<!DOCTYPE html>
-<html lang = "en">
+{% extends "base.htm" %}
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>About Us</title>
-        <link rel="stylesheet" href="styleabout.css">
-    </head>
+{% block title %}About US{% endblock %}
 
-    <body>
+{% block body_class %}about-page{% endblock %}
 
-            
-        <div class="header">
-            <div class="header-logo">Your Logo</div>
+{% block content %}
 
-            <input type="checkbox" id="sidebar-active" hidden>
+    <div class="aboutUsModal">
 
-            <div id="hdlistsidebar">
-                <ul>
-                    <label for="sidebar-active" class="close-sidebar-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
-                    </svg>
-                </label>    
-                    <li class="hideOnDesk"><a href="UI.htm" class="header-btn">Home</a></li>
-                    <li class="hideOnDesk"><a href="#login" onclick="toggleLoginModal()" class="header-btn">Profile</a></li>
-                    <li class="hideOnDesk"><a href="AboutUs.htm" class="header-btn">About Us</a></li>
-                    <li class="hideOnDesk"><a href="#contact" class="header-btn">Contact Us</a></li>
-                </ul>
+        <div id="aboutUsText">
+            <h2>About US</h2>
+            <p>We are a dedicated team committed to delivering exceptional solutions. Our journey began with a simple mission: to innovate and create meaningful impact.</p>
+            <p>Our core values include:</p>
+        </div>
+
         
-            </div>
-        
-            <ul class="hdlist">
-                <li class="hideOnMobile"><a href="UI.htm" class="header-btn">Home</a></li>
-                <li class="hideOnMobile"><a href="#login" onclick="toggleLoginModal()" class="header-btn">Profile</a></li>
-                <li class="hideOnMobile"><a href="AboutUs.htm" class="header-btn">About Us</a></li>
-                <li class="hideOnMobile dropdown">
-                    <a href="#" class="header-btn">Contact Us</a>
-                    <div class="dropdown-content"><br>
-                        <a href="#email">Email Us</a><br>
-                        <a href="#call">Call Us</a><br>
-                        <a href="#visit">Visit Us</a><br>
-                    </div>
-                </li>
-                <label id="overlay" for="sidebar-active" class="open-sidebar-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
-                        <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/>
-                    </svg>
-                </label>
+
+        <div id="about-content">
+
+            <ul id="about-l5ist">
+                <li>Innovation</li>
+                <li>Integrity</li>
+                <li>Customer Satisfaction</li>
             </ul>
-        </div>
-        
-
-        <div class="modal-content">
-
-                <div id="aboutUsText">
-                    <h2>About US</h2>
-                    <p>We are a dedicated team committed to delivering exceptional solutions. Our journey began with a simple mission: to innovate and create meaningful impact.</p>
-                    <p>Our core values include:</p>
-                </div>
-    
-            </div>
-
-            <div id="about-content">
-    
-                <ul id="about-l5ist">
-                    <li>Innovation</li>
-                    <li>Integrity</li>
-                    <li>Customer Satisfaction</li>
-                </ul>
-                
-            </div>
-
-            <div id="btm-abt">
-
-                <p>Desc</p>
-
-            </div>
+            
         </div>
 
-    <script src="scriptp.js"></script>    
 
-    </body>
+    </div>
 
-</html>
+    <div id="btm-abt">
+
+        <p>Desc</p>
+
+    </div>
+
+{% endblock %}

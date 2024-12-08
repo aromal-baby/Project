@@ -28,51 +28,57 @@ function toggleSignup() {
     document.getElementById('modal-content').innerHTML = `
     <div class="modal-content" style="height: 90%;">
 
-        <form style="width:100%">
+        <form style="width:100%" action="/register"method="POST">
             <label>
-                <input type="radio" id = "radio-btn" name="signup" value="PERSONAL" onclick="persSignup()" checked> Personal
+                <input type="radio" id="radio-btn" name="signup" value="PERSONAL" onclick="persSignup()" checked> Personal
             </label>
             <label>
-                <input type="radio" id = "radio-btn" name="signup" value="INSTITUTE" onclick="instSignup()"> Institute
+                <input type="radio" id="radio-btn" name="signup" value="INSTITUTE" onclick="instSignup()"> Institute
             </label>
             <br><br>
 
             <div id="persdetails">
                 <label for="frstname">First Name</label><br>
-                <input type="text" id="frstname" required><br><br>
+                <input type="text" id="frstname" name="frstname" required><br><br>
+
                 <label for="lstname">Last Name</label><br>
-                <input type="text" id="lstname" required><br><br>
+                <input type="text" id="lstname" name="lstname" required><br><br>
+
                 <label for="phone">Mobile Number</label><br>
-                <input type="text" id="phone"><br><br>
+                <input type="text" id="phone" name="phone"><br><br>
+
                 <label for="email">E-mail address</label><br>
-                <input type="email" id="email" required><br><br>
-                <label for="password">Enter a password</label><br>
-                <input type="password" id="password" required><br>
-                <p>At least 8 characters, should contain letters, numbers, and special characters</p><br>
-                <label for="cnfpass">Confirm your password</label><br>
-                <input type="password" id="cnfpass" required><br><br> 
-                <button type="button" id="pers-signup-btn" onclick="registerUser()">Sign Up/Register</button>
+                <input type="email" id="email" name="email" required><br><br>
             </div>
 
             <div id="instdetails" style="display:none;">
                 <label for="postn">Position as</label><br>
-                <input type="text" id="postn"><br><br>
-                <label for="cmpny">Name of the company</label><br>
-                <input type="text" id="cmpny"><br><br>
-                <label for="adrs">Company Address</label><br>
-                <input type="text" id="adrs"><br><br>
-                <label for="empnum">Number of Employees</label><br>
-                <input type="text" id="empnum"><br><br>
-                <label for="password">Enter a password</label><br>
-                <input type="password" id="password" required><br>
-                <label for="cnfpass">Confirm your password</label><br>
-                <input type="password" id="cnfpass" required><br><br>
-                <button type="button" id="inst-signup-btn" onclick="registerUser()">Sign Up/Register</button>
+                <input type="text" id="postn" name="postn"><br><br>
 
+                <label for="cmpny">Name of the company</label><br>
+                <input type="text" id="cmpny" name="cmpny"><br><br>
+
+                <label for="adrs">Company Address</label><br>
+                <input type="text" id="adrs" name="adrs"><br><br>
+
+                <label for="empnum">Number of Employees</label><br>
+                <input type="text" id="empnum" name="empnum"><br><br>
+            </div>
+
+            <div id="common">
+                <label for="password">Enter a password</label><br>
+                <input type="password" id="password" name="password" required><br>
+                <p>At least 8 characters, should contain letters, numbers, and special characters</p><br>
+
+                <label for="cnfpass">Confirm your password</label><br>
+                <input type="password" id="cnfpass" name="cnfpass" required><br><br> 
+
+                <button type="submit" id="pers-signup-btn">Sign Up/Register</button>
             </div>
         </form>
     </div>`;
 }
+
 
 function persSignup() {
     document.getElementById('persdetails').style.display = 'block';
@@ -80,7 +86,6 @@ function persSignup() {
 }
 
 function instSignup() {
-    document.getElementById('pers-signup-btn').style.display = 'none';
     document.getElementById('persdetails').style.display = 'block';
     document.getElementById('instdetails').style.display = 'block';
 }
@@ -117,6 +122,7 @@ function resetLoginModal(){
     </div>`;
 }
 
+/*
 async function registerUser() {
     let firstName, lastName, email, password, phone, position, company, address, employeeCount, userType;
     
@@ -224,7 +230,7 @@ async function loginUser() {
         alert('An error occured during login.');
     }
 }
-
+*/
 
 function toggleAboutUsModal() {
     var modal = document.getElementById('aboutUsModal');

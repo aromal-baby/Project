@@ -1,0 +1,226 @@
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background-image: url('assets/Projectmainbg.jpg');
+    background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+    background-attachment: fixed;
+    margin: 3px;
+    padding: 1px;
+    z-index: -1;
+    color: black;
+}
+
+
+.header {
+    margin: 0;
+    padding: 0 20px;
+    background: linear-gradient(90deg, #627074, #304c53);
+    width: 100%;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 0 0 8px 8px;
+    color: white;
+}
+
+.header-logo {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+ul {
+    display: flex;
+    gap: 30px;
+    list-style-type: none;
+}
+
+#hdlist {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+#hdlist a {
+    display: flex;
+    color: rgb(205, 205, 205);
+    padding: 14px 16px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.header-btn {
+    padding: 8px 16px;
+    background: transparent;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+}
+
+.header-btn:hover {
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: #1e3d27be;
+}
+
+
+#loginModal{
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: linear-gradient(90deg, #5f7373, rgb(34, 49, 47));
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    height: 80%;
+    font-size: 1.2em;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 9;
+    overflow-y: auto;
+}
+
+.modal-content h2 {
+    margin: 10px;
+    font-size: 1.5em;
+    text-align: right;
+}
+
+.modal-content form {
+    margin: 10px;
+    font-size: 1em;
+}
+
+.modal-content #login-btn {
+    padding: 10px 20px;
+    width: 80px;
+    font-size: 0.8em;
+    background: linear-gradient(45deg, rgb(85, 86, 87), rgb(150, 146, 146));
+    color: rgb(254, 254, 254);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    margin-left: auto;
+}
+
+section {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    height: 70vh;
+}
+
+.aboutUsModal{
+    background-image: url('static/assets/aboutUsBg.jpg');
+    background-position: center right;
+	background-repeat: no-repeat;
+	background-size: cover;
+    font-size: large;
+    color: black;
+    z-index: 9999;
+}
+
+#aboutUsText {
+    text-align: right;
+    margin: 20px;
+}
+
+#aboutUsText h2 {
+    color: antiquewhite;
+    text-decoration: underline;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    max-width: 90%;
+}
+
+#aboutUsText p {
+    color: black;
+    font-size: 1em;
+    margin-bottom: 10px;
+    max-width: 90%;
+}
+
+
+@media (max-width: 768px) {
+    .hideOnMobile {
+        display: none;
+    }
+
+    .hideOnDesk {
+        display: flex;
+    }
+
+    .header {
+        height: 8vh;
+        font-size: 0.9em;
+    }
+
+    .modal-content {
+        width: 90%;
+        height: 60%;
+        padding: 15px;
+    }
+
+    #loginModal {
+        padding: 10px;
+    }
+
+    .modal-content h2 {
+        font-size: 1.2em;
+    }
+
+    .modal-content form {
+        font-size: 0.8em;
+    }
+
+    .modal-content #login-btn {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 400px) {
+    .modal-content {
+        width: 100%;
+        height: 100%;
+        padding: 10px;
+    }
+
+    .modal-content h2 {
+        font-size: 1em;
+    }
+
+    .modal-content form {
+        font-size: 0.8em;
+    }
+}
