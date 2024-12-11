@@ -5,12 +5,28 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Default title{% endblock %}</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='styletry.css')}}"></linl>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styletry.css')}}">
+        
     </head>
 
     <body class="{% block body_class %}{% endblock %}">
 
-        <div class="header {% if request.endpoint == 'aboutUs' %}transparent-header{% else %}default-header{% endif %}">
+        <div class="flash-message">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert- {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+        </div>
+
+
+        <div class="header {% if request.endpoint in ['aboutUs', 'main-cont'] %}transparent-header{% else %}default-header{% endif %}">
             <div class="header-logo">Your Logo</div>
     
             <input type="checkbox" id="sidebar-active" hidden>
@@ -56,7 +72,7 @@
                     <h2>Login</h2>
                 </div>
                 <div id="loginPort">
-                    <form action="{{ url_for('login') }}" method="POST">
+                    <form onsubmit="event.preventDefault(); loginUser();">
                         <label for="username">Username</label><br>
                         <input type="text" id="username" name="username" required><br><br>
                         <label for="password">Password</label><br>
@@ -66,7 +82,7 @@
                         </label>
                         <br><br>
                         <button id="login-btn" type="submit"  onclick="loginUser()">Login</button><br>
-                        <center><p>Don't have an account <a href="#" onclick="toggleSignup()">Register?</a></p></center>
+                        <center><p>Don't have an account <a href="{{ url_for('register_form') }}">Register?</a></p></center>
                         </form>
                         <button id="button" onclick="toggleLoginModal()">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="black">

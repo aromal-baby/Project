@@ -1,4 +1,3 @@
-
 *{
     box-sizing: border-box;
 	margin: 0px;
@@ -8,21 +7,14 @@
 
 body{
     min-height: 100vh;
+    background-image: url('assets/Projectmainbg.jpg');
     background-position: center;
-	background-repeat: no-repeat;
+	background-image: no-repeat;
 	background-size: cover;
     background-attachment: fixed;
     margin: 3px;
     padding: 1px;
     z-index: -1;
-}
-
-body.home-page{
-    background-image: url('assets/Projectmainbg.jpg');
-}
-
-body.about-page{
-    background-image: url('assets/aboutUsBg.jpg');
 }
 
 #loginModal {
@@ -138,12 +130,7 @@ body.about-page{
     z-index: 1000;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15); 
     border-radius: 0px 0px 8px 8px; 
-}
-
-.default-header{
-    background: linear-gradient(90deg, #627074, #304c53); 
-    width: 100%;
-    color: white;
+    color: white; 
 }
 
 ul {
@@ -153,7 +140,6 @@ ul {
 }
 
 #hdlist {
-    color: white;
     display: flex;
     align-items: center;
     gap: 20px;
@@ -185,12 +171,11 @@ ul {
     display: flex;
     align-items: center;
     gap: 20px;
-    color: white;
 }
 
 #hdlist a{
     display: flex;
-    color: rgb(197, 197, 197);
+    color: rgb(205, 205, 205);
     padding: 14px 16px;
     text-decoration: none;
     text-align: center;
@@ -248,32 +233,7 @@ ul {
 
 .dropdown-content a:hover{
     color: #0a0f11;
-    transition: background 0.3s ease, color 10 ease;
-}
-
-/*aboutus header*/
-.transparent-header{
-    background: transparent;
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
-    color: white;
-}
-
-.transparent-header ul{
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    padding: 10px;
-}
-
-.transparent-header a{
-    color: white;
-    text-decoration: none;
-}
-
-.transparent-header a:hover{
-    text-shadow: 0px 2px 4px rgba(255, 255, 255, 0.8);
+    transition: background 0.3 ease, color 10 ease;
 }
 
 section{
@@ -371,7 +331,7 @@ section{
 #imgblock1{
     background-image: url('assets/imgblock1.jpg');
     background-position: center;
-	background-repeat: no-repeat;
+	background-image: no-repeat;
 	background-size: cover;
     width: 50%;
     height: 50vh;
@@ -389,7 +349,7 @@ section{
 #imgblock2{
     background-image: url('assets/imgblock2.jpg');
     background-position: center;
-	background-repeat: no-repeat;
+	background-image: no-repeat;
 	background-size: cover;
     width: 50%;
     height: 50vh;
@@ -402,34 +362,6 @@ section{
     width : 100%;
     background: transparent;
     backdrop-filter: blur(20px);
-}
-
-
-/*  ABOUT US PAGE */
-
-.aboutUsModal{
-    font-size: large;
-    color: black;
-}
-
-#aboutUsText {
-    text-align: right;
-    margin: 20px;
-}
-
-#aboutUsText h2 {
-    color: antiquewhite;
-    text-decoration: underline;
-    font-size: 1.5em;
-    margin-bottom: 10px;
-    max-width: 90%;
-}
-
-#aboutUsText p {
-    color: black;
-    font-size: 1em;
-    margin-bottom: 10px;
-    max-width: 90%;
 }
 
 
@@ -504,6 +436,9 @@ section{
 
     .dropdown-content {
         display: none; 
+
+    #loginModal{
+        padding: 20px;
     }
  
     .modal-content{
@@ -549,6 +484,13 @@ section{
     }
 }
 
+.header-btn {
+    text-decoration: none;
+    color: wheat;
+    padding: 10px;
+    display: inline-block;
+}
+
 @media(max-width: 400px) {
 
     .hideOnMobile{
@@ -569,7 +511,6 @@ section{
 
     #loginModal{
         padding: 10px;
-        flex-shrink: -1;
     }
 
     .modal-content{
