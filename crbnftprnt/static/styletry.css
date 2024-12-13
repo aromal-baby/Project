@@ -15,6 +15,13 @@ body{
     margin: 3px;
     padding: 1px;
     z-index: -1;
+    overflow: auto;
+    scrollbar-width: 2px;
+    -ms-text-overflow-style: none;
+}
+
+body::-webkit-scrollbar{
+    display: none;
 }
 
 body.home-page{
@@ -23,6 +30,10 @@ body.home-page{
 
 body.about-page{
     background-image: url('assets/aboutUsBg.jpg');
+}
+
+body.index-page{
+    background: white;
 }
 
 #loginModal {
@@ -135,7 +146,7 @@ body.about-page{
     align-items: center;
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 11;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15); 
     border-radius: 0px 0px 8px 8px; 
 }
@@ -256,8 +267,9 @@ ul {
     background: transparent;
     position: fixed;
     width: 100%;
-    z-index: 1000;
+    z-index: 11;
     color: white;
+    box-shadow: 0px 0px .5px rgba(0, 0, 0, 0.15); 
 }
 
 .transparent-header ul{
@@ -272,9 +284,6 @@ ul {
     text-decoration: none;
 }
 
-.transparent-header a:hover{
-    text-shadow: 0px 2px 4px rgba(255, 255, 255, 0.8);
-}
 
 section{
     margin: 0px;
@@ -435,10 +444,9 @@ section{
 
 /* Index page */
 
-body.index-page{
-    background-image: url('assets/Projectmainbg.jpg');
+.transparent-header button{
+    color: black;
 }
-
 
 
 /*ALERTS*/
@@ -543,6 +551,132 @@ button#cls-regModal:hover {
     background-color: #cc0000;
 }
 
+/* CALCULATOR */
+.calc-graph{
+    background-image: url('assets/main-cont-form2.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+}
+
+.calc-modal {
+    position: absolute;
+    top: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    background-image: url('assets/main-cont-calc3.jpeg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: relative;
+    width: 100%;
+    height: 100vh;
+    z-index: 10;
+    padding: 10%;
+}
+
+#calc-cont{
+    height: 200vh;
+    width: 55%;
+    overflow: hidden;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+}
+
+fieldset{
+    margin: .1em 0;
+    padding: 1em 1.25em;
+    border: solid 1.25px rgb(131, 133, 131);
+    border-radius: 5px;
+    backdrop-filter: blur(2px);
+}
+
+legend{
+    font-size: 1em;
+    padding: 0 .25em;
+    color: #ffffff;
+    background-color: #1b1d1a;
+    border-radius: 2px;
+}
+
+#calc-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: transparent;
+    width: 100%;
+    margin-top: 20px;
+    overflow: auto;
+    scrollbar-width: 2px;
+    -ms-text-overflow-style: none;
+}
+
+#calc-form::-webkit-scrollbar{
+    display: none;
+}
+
+#calc-form label{
+    color: rgb(255, 255, 255);
+    display: block;
+    margin-top: 5%;
+    margin-bottom: 0;
+}
+
+
+#calc-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+
+#calc-form input {
+    padding: 15px 10px 5px;
+    border: 1.5px solid rgb(131, 133, 131);
+    border-radius: 3px;
+    font-size: 16px;
+    color: #ffffff;
+    width: 100%;
+    position: relative;
+    background: rgba(105, 129, 102, 0.473);
+}
+
+#calc-form input:focus{
+    border-color: #405e43;
+    outline: none;
+}
+
+#calc-form button {
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    color: white;
+    background: transparent;
+    border: solid .5px white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#calc-form button:hover {
+    background: #405e43;
+}
+
+#calc-form button[type="reset"] {
+    background: transparent;
+}
+
+#calc-form button[type="reset"]:hover {
+    background: #2c3129;
+}
+
 
  
 @media (max-width: 768px) {
@@ -562,7 +696,7 @@ button#cls-regModal:hover {
         padding: 10px;
         height: 100vh;
         width: 70%;
-        z-index: 8;
+        z-index: 25;
         border-radius: 3px;
         background-color: rgb(2, 2, 2),0.8;
         backdrop-filter: blur(20px);

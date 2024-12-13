@@ -6,7 +6,55 @@
 
 {% block content %}
 
+<div class="calc-graph">
 
-<h1> BLAH !!!</h1>
+    <div>
+
+    </div>
+
+
+</div>
+
+
+<div class="calc-modal">
+
+    <div id="calc-cont">
+
+
+       <div id="calc-form">
+            <form action="/main-content" method="POST">
+                <fieldset>
+                    <legend>Energy usage</legend>
+                    <label for="energy1">What is your average monthly electricity bill in Euros?</label><br>
+                    <input type="text" id="energy1" name="energy1"><br><br>
+                    <label for="energy2">What is your average monthly natural gas bill in Euros?</label><br>
+                    <input type="text" id="energy2" name="energy2"><br><br>
+                    <label for="energy3">What is your average monthly fuel bill for transportation in Euros?</label><br>
+                    <input type="text" id="calc-text3" name="calc-text3">
+                </fieldset>
+
+                <fieldset>
+                    <legend>Waste usage</legend>
+                    <label for="waste1">How much do you generate per month in kilograms?</label><br>
+                    <input type="text" id="waste1" name="waste1"><br><br>
+                    <label for="waste2">How much of that waste is recycled or composted(in percentage)?</label><br>
+                    <input type="text" id="waste2" name="waste2">
+                </fieldset>
+                
+                <fieldset>
+                    <legend>Business</legend>
+                    <label for="business1">How many kilometers your employees travel per year for business purpose?</label><br>
+                    <input type="text" id="business1" name="business1"><br><br>
+                    <label for="business2">What is the average fuel efficiency of the vehicles used for business travel in liters/100km?</label><br>
+                    <input type="text" id="business2" name="business2">
+                </fieldset>
+
+                <button type="submit" onclick="calculate()">sub</button><button type="reset">Reset</button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock %}

@@ -1,27 +1,3 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const modal = document.querySelector('#loginModal');
-     if (modal) {
-        modal.style.display = 'none';
-    } else {
-        console.error("Modal element not found");
-    }
-
-    const urlParams = new URLSearchParams(window.location.search)
-    if (urlParams.has('showLogin') && urlParams.get('showLogin') === 'true') {
-        toggleLoginModal();
-    }
-
-    const flasMessage = document.querySelector('.flash-messsage');
-    if (flasMessage && flasMessage.textContent.includes('Registration successful')) {
-
-        resetLoginModal();
-        toggleLoginModal();
-
-        alert('Registration successful! Please login.');
-    }
-});
-
-
 function toggleLoginModal(){
     const sidebar = document.querySelector('#sidebar-active');
     const modal = document.querySelector('#loginModal');
@@ -37,6 +13,22 @@ function toggleLoginModal(){
         modal.style.display = 'flex';
     }
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    const modal = document.querySelector('#loginModal');
+     if (modal) {
+        modal.style.display = 'none';
+    } else {
+        console.error("Modal element not found");
+    }
+
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.has('showLogin') && urlParams.get('showLogin') === 'true') {
+        toggleLoginModal();
+        alert('New user registered. Please login to continue.');
+    }
+});
+
 
 function registerClose() {
     // Close the registration modal
@@ -104,7 +96,8 @@ async function registerUser() {
         phone: document.getElementById('phone')?.value.trim(),
         email: document.getElementById('email')?.value.trim(),
         password: document.getElementById('Regpassword')?.value.trim(),
-        cnfpass: document.getElementById('cnfpass')?.value.trim()
+        cnfpass: document.getElementById('cnfpass')?.value.trim(),
+        userType: userType
     };
 
 
@@ -134,16 +127,66 @@ async function registerUser() {
             console.error('Error response text:', errorText);
             throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
         } 
-        const result = 
+
+        const result = await response.json();
+
+        if(result.success) {
+            alert(result.flashMessage || 'Regitration successful')
+
+            window.location.href = '/?showLogin=true';
+        }
         else {
             alert('Registration failed');
         }
-    } catch (error) {
+    } 
+    catch (error) {
         console.error('Full Error during registration:', error);
-        alert('An error occurred during registration.');
+
+        if(error instanceof SyntaxError) {
+            alert('Server response could not be passed. Please check the server logs.');
+        }
+        else {
+            alert('An error occurred during registration:');  
+        }
+        
     }
 }
 
+
 async function loginUser() {
-      
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const rememberMe = document.querySelector('input[type="checkbox"]').checked;
+
+    try {
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username,
+                password,
+                rememberMe
+            })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            
+            alert('Login successful');
+            window.location.href = '/main-content';
+        } else {
+            
+            alert(result.errorMessage || 'Login failed. Please check your credentials.');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        alert('An error occurred during login. Please try again.');
+    }
+}
+
+async function calculate(){
+    
 }

@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError
 import secrets
 from crbnftprnt.models import User
+from flask_login import login_required
 
 
 def validate_password(password):
@@ -41,109 +42,110 @@ def generate_unique_user_id(last_name):
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
+    # Get JSON data from request
+    data = request.get_json()
 
-        if request.is_json:
-            data = request.get_json()
+    try:
+        # Validate required fields
+        if not all(key in data for key in ['frstname', 'lstname', 'email', 'password', 'cnfpass']):
+            return jsonify({
+                'success': False, 
+                'message': 'All required fields must be filled'
+            }), 400
 
-        else :
-            data = request.form
+        # Check password match
+        if data['password'] != data['cnfpass']:
+            return jsonify({
+                'success': False, 
+                'message': 'Passwords do not match'
+            }), 400
 
+        # Check if email already exists
+        existing_user = User.query.filter_by(email=data['email']).first()
+        if existing_user:
+            return jsonify({
+                'success': False, 
+                'message': 'Email already exists'
+            }), 409
 
-        first_name = data.get('frstname') or request.form.get('frstname')
-        last_name = data.get('lstname') or request.form.get('lstname')
-        phone = data.get('phone') or request.form.get('phone')
-        email = data.get('email') or request.form.get('email')
-        position = data.get('postn') or request.form.get('postn')
-        company_name = data.get('cmpny') or request.form.get('cmpny')
-        address = data.get('adrs') or request.form.get('adrs')
-        no_employees = data.get('empnum') or request.form.get('empnum')
-        password = data.get('password') or request.form.get('password')
-        cnf_password = data.get('cnfpass') or request.form.get('cnfpass')
+        # Generate unique user ID (you might want to implement a more robust method)
+        user_id = f"{data['lstname']}_{User.query.count() + 1}"
 
+        # Create new user
+        new_user = User(
+            user_id=user_id,
+            first_name=data['frstname'],
+            last_name=data['lstname'],
+            phone=data.get('phone', ''),
+            email=data['email'],
+            user_type=data.get('userType', 'PERSONAL')
+        )
 
-        if not all([first_name, last_name, email, password, cnf_password]):
-            flash('All required feilds must be filled', 'error')
-            return redirect(url_for('register'))
+        # Set password
+        new_user.set_password(data['password'])
 
-        # Validate password match
-        if password != cnf_password:
-           flash('Passwords do not match')
-           return redirect(url_for('register'))
+        # Add institute-specific details if available
+        if data.get('userType') == 'INSTITUTE':
+            new_user.position = data.get('postn', '')
+            new_user.company_name = data.get('cmpny', '')
+            new_user.address = data.get('adrs', '')
+            new_user.no_employees = int(data.get('empnum', 0)) if data.get('empnum') else None
 
-        # Validate password strength
-        if not validate_password(password):
-            flash('Password does not meet strength requirements')
-            return redirect(url_for('register'))
+        # Add to database
+        db.session.add(new_user)
+        db.session.commit()
 
-        # Generate unique user ID
-        user_id = generate_unique_user_id(last_name)
+        return jsonify({
+            'success': True, 
+            'message': 'Registration successful',
+            'user_id': user_id
+        }), 201
 
-        try:
-            # Check if email already exists
-            existing_user = User.query.filter_by(email=email).first()
-            if existing_user:
-                flash('Email already exists')
-                return redirect(url_for('register'))
-            
-
-            new_user = User(
-                user_id=user_id,
-                first_name=first_name,
-                last_name=last_name,
-                phone=phone,
-                email=email,
-                position=position,
-                company_name=company_name,
-                address=address,
-                no_employees=int(no_employees) if no_employees else None,
-                user_type="PERSONAL" if position else "INSTITUTE"
-            )
-            new_user.set_password(password)
-
-            db.session.add(new_user)
-            db.session.commit()
-
-            flash(f'Registration successful!', 'success')
-            return redirect(url_for('main_cont'))
-
-        except IntegrityError:
-            db.session.rollback()
-            flash(f'Email aready exist! Please login')
-            return render_template('index.htm')
-
-
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Register failed: {str(e)}', 'error')
-            return redirect(url_for('register'))
-
-    flash(f'registration successful! Please login ')
-    return render_template('login.html')
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            'success': False, 
+            'message': f'Registration failed: {str(e)}'
+        }), 500
+    
 
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        try:
 
-        if request.is_json:
-            data = request.get_json()
+            if request.is_json:
+                data = request.get_json()
+            else:
+                data = request.form
 
-        else :
-            data = request.form
+            username = data.get('username')
+            password = data.get('password')
+            
 
+            print(f"Login attempt for username: {username}")
 
-        username = data.get('username') or request.form.get('username') 
-        password = data.get('password') or request.form.get('password') 
+            user = User.query.filter_by(email=username).first()
 
-        user = User.query.filter_by(email=username).first()
+            if user and user.check_password(password):
 
-        if user and user.check_password(password):
-          return redirect(url_for('index'))
-        else:
-            flash('Invalid email or password', 'error')
-            return redirect(url_for('login'))
+                return jsonify({
+                    'message': 'Login successful',
+                    'redirect': url_for('main_cont')
+                }), 200 
+            else:
+                return jsonify({
+                    'errorMessage': 'Invalid email or password'
+                }), 401
+        
+        except Exception as e:
+
+            print(f"Login error: {str(e)}")
+            return jsonify({
+                'errorMessage': 'An unexpected error occurred'
+            }), 500
 
     return render_template('main-cont.html')
 
@@ -161,7 +163,9 @@ def aboutUs():
     return render_template('AboutUs.htm')
 
 @app.route('/main-content')
+@login_required
 def main_cont():
+
     return render_template('main-cont.html')
 
 @app.route('/register-page')

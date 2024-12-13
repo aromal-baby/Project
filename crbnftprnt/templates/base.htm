@@ -26,7 +26,7 @@
         </div>
 
 
-        <div class="header {% if request.endpoint in ['aboutUs', 'main-cont'] %}transparent-header{% else %}default-header{% endif %}">
+        <div class="header {% if request.endpoint == 'aboutUs' or request.endpoint == 'login' %} transparent-header {% else %} default-header {% endif %}">
             <div class="header-logo">Your Logo</div>
     
             <input type="checkbox" id="sidebar-active" hidden>
@@ -72,7 +72,7 @@
                     <h2>Login</h2>
                 </div>
                 <div id="loginPort">
-                    <form onsubmit="event.preventDefault(); loginUser();">
+                    <form action="/login" onsubmit="event.preventDefault(); loginUser();">
                         <label for="username">Username</label><br>
                         <input type="text" id="username" name="username" required><br><br>
                         <label for="password">Password</label><br>
