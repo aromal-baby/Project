@@ -6,12 +6,16 @@
 
 {% block content %}
 
-<div class="calc-graph">
+<div class="calc-graph-modal" class="graph-container">
 
-    <div>
-
+    <div id="calc-graph">
+        <div class="emission-details">
+            <p>Energy Emission: <span id="energy-emission">0</span>kg CO2</p>
+            <p>Waste Emission: <span id="waste-emission">0</span>kg CO2</p>
+            <p>Business Emission: <span id="business-emission">0</span>kg CO2</p>
+        </div>
+        <img id="carbon-graph" src="" alt="Carbon Emission Graph" />
     </div>
-
 
 </div>
 
@@ -22,34 +26,34 @@
 
 
        <div id="calc-form">
-            <form action="/main-content" method="POST">
+            <form action="/main-content" method="POST" id="carbonCalculatorForm" onsubmit="handleFormSubmit(event)">
                 <fieldset>
                     <legend>Energy usage</legend>
                     <label for="energy1">What is your average monthly electricity bill in Euros?</label><br>
-                    <input type="text" id="energy1" name="energy1"><br><br>
+                    <input type="number" id="energy1" name="energy1"><br><br>
                     <label for="energy2">What is your average monthly natural gas bill in Euros?</label><br>
-                    <input type="text" id="energy2" name="energy2"><br><br>
+                    <input type="number" id="energy2" name="energy2"><br><br>
                     <label for="energy3">What is your average monthly fuel bill for transportation in Euros?</label><br>
-                    <input type="text" id="calc-text3" name="calc-text3">
+                    <input type="number" id="energy3" name="energy3">
                 </fieldset>
 
                 <fieldset>
                     <legend>Waste usage</legend>
                     <label for="waste1">How much do you generate per month in kilograms?</label><br>
-                    <input type="text" id="waste1" name="waste1"><br><br>
+                    <input type="number" id="waste1" name="waste1"><br><br>
                     <label for="waste2">How much of that waste is recycled or composted(in percentage)?</label><br>
-                    <input type="text" id="waste2" name="waste2">
+                    <input type="number" id="waste2" name="waste2">
                 </fieldset>
                 
                 <fieldset>
                     <legend>Business</legend>
                     <label for="business1">How many kilometers your employees travel per year for business purpose?</label><br>
-                    <input type="text" id="business1" name="business1"><br><br>
+                    <input type="number" id="business1" name="business1"><br><br>
                     <label for="business2">What is the average fuel efficiency of the vehicles used for business travel in liters/100km?</label><br>
-                    <input type="text" id="business2" name="business2">
+                    <input type="number" id="business2" name="business2">
                 </fieldset>
 
-                <button type="submit" onclick="calculate()">sub</button><button type="reset">Reset</button>
+                <button type="submit" onclick="calculate()">calculate</button><button type="reset">Reset</button>
             </form>
         </div>
 

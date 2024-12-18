@@ -1,4 +1,4 @@
-function toggleLoginModal(){
+async function toggleLoginModal() {
     const sidebar = document.querySelector('#sidebar-active');
     const modal = document.querySelector('#loginModal');
 
@@ -172,21 +172,104 @@ async function loginUser() {
         });
 
         const result = await response.json();
+        console.log('Login response:', result)
 
-        if (response.ok) {
-            
-            alert('Login successful');
-            window.location.href = '/main-content';
-        } else {
-            
-            alert(result.errorMessage || 'Login failed. Please check your credentials.');
+        if (result.success) {
+
+            if(result.redirect) {
+                window.location.href = result.redirect;
+            }
+            else{
+               window.location.href = '/main-cont';
+            }
+        } 
+        else {
+            alert(result.message || 'Login failed')
         }
-    } catch (error) {
+    }
+    catch (error) {
         console.error('Login error:', error);
         alert('An error occurred during login. Please try again.');
     }
 }
 
-async function calculate(){
-    
+
+
+
+async function calculate(event){
+
+    if(event) {
+        event.preventDefault();
+    }
+
+   const formData = {
+        electricbill: document.getElementById('energy1')?.value.trim() || '0',
+        gasbill: document.getElementById('energy2')?.value.trim() || '0',
+        fuelbill: document.getElementById('energy3')?.value.trim() || '0',
+        wstweight: document.getElementById('waste1')?.value.trim() || '0' ,
+        recycled_perc: document.getElementById('waste2')?.value.trim || '0'(),
+        distance_traveled: document.getElementById('business1')?.value.trim() || '0',
+        fuelef_avg: document.getElementById('business2')?.value.trim() || '0'
+    };
+
+    try {
+        const graphContainer = document.getElementById('calc-graph');
+        if(!graphContainer) {
+            console.error("Graph container not found");
+            return;
+        }
+
+        graphContainer.innerHTML = `<p>Loading...</p>`;
+
+        const response = await fetch('/main-content', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify(formData),
+        });
+
+        if(!response.ok) {
+            const errorText = await response.json();
+            throw new Error(errorText.error || 'Failed to calculate carbon emission');
+        }
+
+        const result = await response.json();
+        console.log('Server response:', result)
+
+
+        if(!result.error) {
+            throw new Error(result.error);
+        }
+
+        if(result.graph){
+             document.getElementById('carbon-graph').src = `data:image/png;base64,${result.graph}`;
+        }
+
+        document.getElementById('energy-emission').textContent = result.total_carbon_emission_by_energy.toFixed(2) || '0';
+        document.getElementById('waste-emission').textContent = result.total_carbon_emission_by_waste.toFixed(2) || '0';
+        document.getElementById('business-emission').textContent = result.total_carbon_emission_by_business.toFixed(2) || '0';
+
+        document.getElementsByClassName('calc-graph-modal').scrollIntoView({ behaviour: 'smooth' });
+        graphContainer.scrollIntoView({ behavior: 'smooth' });
+        
+    }
+    catch (error) {
+        console.error('Calculation error:', error);
+        const graphContainer = document.getElementById('calc-graph');
+
+        if(graphContainer) {
+            graphContainer.innerHTML = `<p>Error: ${error.message}</p>`;
+        }
+        alert(`Calculation Error: ${error.message}`);
+    }
+
 }
+
+
+function handleFormSubmit(event) {
+    event.preventDefault();
+    calculate(event);
+}
+
