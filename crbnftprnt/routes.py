@@ -196,7 +196,7 @@ def handle_post_request(user):
             carbon_emission_result = calculate_and_save_emission(validated_data, user.no_employees)
             logger.info(f"Calculation result: {carbon_emission_result}")
         except Exception as e:
-            loggerinfo(f"Error in calculation: {str(e)}")
+            logger.info(f"Error in calculation: {str(e)}")
             return jsonify({"error": "Error calculating emissions"}), 500
 
         try:
