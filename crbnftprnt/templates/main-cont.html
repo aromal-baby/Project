@@ -8,13 +8,23 @@
 
 <div class="calc-graph-modal" class="graph-container">
 
-    <div id="calc-graph">
-        <div class="emission-details">
-            <p>Energy Emission: <span id="energy-emission">0</span>kg CO2</p>
-            <p>Waste Emission: <span id="waste-emission">0</span>kg CO2</p>
-            <p>Business Emission: <span id="business-emission">0</span>kg CO2</p>
+    <div id="calc-result">
+        <div id="calc-graph">
+            <div id="calc-graph">
+                <!-- Default content when no data -->
+                <div class="default-graph-content">
+                    <img src="default-calc-graph.svg" alt="Default Graph" class="default-image">
+                    <p>Enter your data in the form below to calculate your carbon footprint</p>
+                </div>
+            </div>
+            <p style="color: white; text-align: center;">No data to display yet. Please fill the form below.</p>
         </div>
-        <img id="carbon-graph" src="" alt="Carbon Emission Graph" />
+        <img id="carbon-graph" src="" alt="Carbon Emission Graph">
+        <div class="emission-details">
+            <p>Energy Emission: <span id="energy-emission">0.00</span>kg CO2</p>
+            <p>Waste Emission: <span id="waste-emission">0.00</span>kg CO2</p>
+            <p>Business Emission: <span id="business-emission">0.00</span>kg CO2</p>
+        </div>
     </div>
 
 </div>

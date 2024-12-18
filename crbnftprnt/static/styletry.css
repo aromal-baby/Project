@@ -4,9 +4,11 @@
 	margin: 0px;
 	padding: 0;
 	font-family: 'poppins',sans-serif;
+    scroll-behavior: smooth;
 }
 
 body{
+    scroll-behavior: smooth;
     min-height: 100vh;
     background-position: center;
 	background-repeat: no-repeat;
@@ -30,10 +32,6 @@ body.home-page{
 
 body.about-page{
     background-image: url('assets/aboutUsBg.jpg');
-}
-
-body.index-page{
-    background: white;
 }
 
 #loginModal {
@@ -560,22 +558,21 @@ button#cls-regModal:hover {
 
 /* CALCULATOR */
 .calc-graph-modal{
-    background-image: url('assets/main-cont-form2.jpg');
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(223, 217, 217, 0.2)), url('assets/main-cont-form2.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    height: 100vh;
+    min-height: 100vh;
     width: 100%;
     position: relative;
     padding: 50px;
     display: block;
-    max-width: 800px;
     margin: 0 auto;
     text-align: center;
     padding: 20px;
 }
 
-#calc-graph{
+#calc-result{
     position: absolute;
     background: transparent;
     backdrop-filter: blur(2px);
@@ -585,6 +582,49 @@ button#cls-regModal:hover {
     bottom: 10%;
     border: solid .5px rgb(58, 69, 53);
     border-radius: 3px;
+    gap: 20px;
+    padding-bottom: 0;
+}
+
+#calc-graph{
+    width: 100%;
+    min-height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#carbon-graph{
+    position: absolute;
+    top: 0;
+    max-width: 100%;
+    height: auto;
+    display: none;
+    border-radius: 3px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: transparent;
+}
+
+#carbon-graph[src] {
+    display: block;
+}
+
+.emission-details {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    color: white
+}
+
+.emission-details p{
+    margin: 10px 0;
+    font-size: 1.1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .calc-modal {
@@ -813,7 +853,33 @@ legend{
     #rightblock {
         bottom: 0;
     }
+
+    /*CALCULATOR*/
+    .calc-graph-modal {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    #calc-result {
+        width: 90%;
+        margin: 20px auto;
+        height: auto;
+        min-height: 60vh;
+    }
+
+    #calc-cont {
+        padding: 10px;
+    }
+
+    #calc-form {
+        padding: 15px;
+    }
+
+    fieldset {
+        padding: 15px;
+    }
 }
+
 
 @media(max-width: 400px) {
 
@@ -877,5 +943,31 @@ legend{
     .container4{
         display: flex;
         flex-shrink: -1;
+    }
+    #calc-result {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .emission-details {
+        padding: 15px;
+    }
+
+    .emission-details p {
+        font-size: 0.9em;
+    }
+
+    #calc-form button {
+        width: 100%;
+        margin: 5px 0;
+    }
+}
+
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    #calc-result {
+        width: 50%;
+        margin-right: 3%;
     }
 }

@@ -202,69 +202,90 @@ async function calculate(event){
         event.preventDefault();
     }
 
-   const formData = {
-        electricbill: document.getElementById('energy1')?.value.trim() || '0',
-        gasbill: document.getElementById('energy2')?.value.trim() || '0',
-        fuelbill: document.getElementById('energy3')?.value.trim() || '0',
-        wstweight: document.getElementById('waste1')?.value.trim() || '0' ,
-        recycled_perc: document.getElementById('waste2')?.value.trim || '0'(),
-        distance_traveled: document.getElementById('business1')?.value.trim() || '0',
-        fuelef_avg: document.getElementById('business2')?.value.trim() || '0'
-    };
+    const graphContainer = document.getElementById('calc-graph');
+    const resultContainer = document.getElementById('calc-result');
+    
+    if(!graphContainer) {
+        console.error("Graph container not found");
+        alert("Error: Graph container not found on page");
+        return;
+    }
 
-    try {
-        const graphContainer = document.getElementById('calc-graph');
-        if(!graphContainer) {
-            console.error("Graph container not found");
-            return;
+    try{
+
+        if(defaultContent){
+            defaultContent.style.display = 'none'
         }
 
         graphContainer.innerHTML = `<p>Loading...</p>`;
+
+        const formData = {
+            electricbill: document.getElementById('energy1')?.value.trim() || '0',
+            gasbill: document.getElementById('energy2')?.value.trim() || '0',
+            fuelbill: document.getElementById('energy3')?.value.trim() || '0',
+            wstweight: document.getElementById('waste1')?.value.trim() || '0' ,
+            recycled_perc: document.getElementById('waste2')?.value.trim || '0'(),
+            distance_traveled: document.getElementById('business1')?.value.trim() || '0',
+            fuelef_avg: document.getElementById('business2')?.value.trim() || '0'
+        };
+
+        console.log('Sending data:', formData);     
 
         const response = await fetch('/main-content', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             credentials: 'same-origin',
-            body: JSON.stringify(formData),
+            body: JSON.stringify(formData)
+
         });
 
-        if(!response.ok) {
-            const errorText = await response.json();
-            throw new Error(errorText.error || 'Failed to calculate carbon emission');
-        }
-
         const result = await response.json();
-        console.log('Server response:', result)
+        console.log('Recieved result:', result)
 
-
-        if(!result.error) {
-            throw new Error(result.error);
+        if(!response.ok) {
+            throw new Error(result.error || 'Failed to calculate carbon emission');
         }
 
-        if(result.graph){
-             document.getElementById('carbon-graph').src = `data:image/png;base64,${result.graph}`;
+        const energyElement = document.getElementById('energy-emission');
+        if (energyElement && result.total_carbon_emission_by_energy !== undefined) {
+            energyElement.textContent = result.total_carbon_emission_by_energy.toFixed(2);
         }
 
-        document.getElementById('energy-emission').textContent = result.total_carbon_emission_by_energy.toFixed(2) || '0';
-        document.getElementById('waste-emission').textContent = result.total_carbon_emission_by_waste.toFixed(2) || '0';
-        document.getElementById('business-emission').textContent = result.total_carbon_emission_by_business.toFixed(2) || '0';
+        const wasteElement = document.getElementById('waste-emission');
+        if (wasteElement && result.total_carbon_emission_by_waste !== undefined) {
+            wasteElement.textContent = result.total_carbon_emission_by_waste.toFixed(2);
+        }
 
-        document.getElementsByClassName('calc-graph-modal').scrollIntoView({ behaviour: 'smooth' });
-        graphContainer.scrollIntoView({ behavior: 'smooth' });
-        
+        const businessElement = document.getElementById('business-emission');
+        if (businessElement && result.total_carbon_emission_by_business !== undefined) {
+            businessElement.textContent = result.total_carbon_emission_by_business.toFixed(2);
+        }
+
+
+        const graphImg = document.getElementById('carbon-graph');
+        if (graphImg && result.graph){
+            graphImg.src = `data:image/persSignup;base64,${result.graph}`;
+            graphContainer.innerHTML = '';
+        }
+
+
+        resultContainer.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+       
     }
     catch (error) {
         console.error('Calculation error:', error);
-        const graphContainer = document.getElementById('calc-graph');
+        graphContainer.innerHTML =`<p style="color: red;">Error: ${error.message}</p>`;
 
-        if(graphContainer) {
-            graphContainer.innerHTML = `<p>Error: ${error.message}</p>`;
+        if(defaultContent) {
+            defaultContent.style.display = 'flex';
         }
-        alert(`Calculation Error: ${error.message}`);
     }
-
 }
 
 

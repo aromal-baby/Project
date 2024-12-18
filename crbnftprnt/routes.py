@@ -3,7 +3,9 @@ from flask import render_template, request, redirect, url_for, jsonify
 from flask_login import login_required, current_user, login_user, logout_user
 from crbnftprnt.models import User, CrbnData
 from werkzeug.security import generate_password_hash, check_password_hash
-import matplotlib as plt
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 from io import BytesIO
 import os, re, traceback, base64, secrets
 
@@ -162,18 +164,18 @@ def main_cont():
             logger.error(f"User not found: {current_user.user_id}")
             return jsonify({"error": "User not found"}), 404
 
-        if request.method == 'POST': 
 
-            if not request.is_json:
-                logger.error("Request must be JSON")
-                return jsonify({"error": "Request must be JSON"}), 400
+        if not request.is_json:
+            logger.error("Request must be JSON")
+            return jsonify({"error": "Request must be JSON"}), 400
             
-            return handle_post_request(user)
+        print("Recieved data:", request.get_json())
+        return handle_post_request(user)
         
     except Exception as e :
         logger.error(f"Unexpected error occured in main_cont: {str(e)}")
         logger.error(traceback.format_exc())
-        return jsonify({"error": "Unexpected server error: {str(e)}"}), 500
+        return jsonify({"error": {str(e)}}), 500
     
 
 
@@ -183,30 +185,33 @@ def handle_post_request(user):
         logger.info("Received POST request to /main-content")
 
         data = request.get_json()
+        logger.info(f"Recieved data: {data}")
+
         if not data:
             logger.error("No input data provided")
             return jsonify({"error": "No input data provided"}), 400
 
         validated_data = validate_input_data(data)
         if validated_data is None:
+            logger.error("Data validation failed")
             return jsonify({"error": "Invalid input data"}), 400
 
-        try:
+        logger.info(f"Validation data: {validated_data}")
 
+        try:
             carbon_emission_result = calculate_and_save_emission(validated_data, user.no_employees)
             logger.info(f"Calculation result: {carbon_emission_result}")
         except Exception as e:
             logger.info(f"Error in calculation: {str(e)}")
-            return jsonify({"error": "Error calculating emissions"}), 500
+            return jsonify({"error": "Error calculating emissions: {str(e)}"}), 500
 
         try:
             graph_base64 = generate_emission_graph(carbon_emission_result)
             if graph_base64 is None:
-                logger.error("Graph generation returned none")
-                return jsonify({"error": "Error generating graph"}),500
+                raise Exception("Graph generation returned None")
         except Exception as e:
-            logger.error(f"Error in graph genration: {str(e)}")
-            reutrn jsonify({"errror": "Error generating graph"}), 500
+            logger.error(f"Graph genration error: {str(e)}")
+            return jsonify({"errror": "Error generating graph {str(e)}"}), 500
 
         response_data = {
             'total_carbon_emission_by_energy': carbon_emission_result['total_carbon_emission_by_energy'],
@@ -218,11 +223,10 @@ def handle_post_request(user):
         return jsonify(response_data), 200
 
     except Exception as e:
-        logger.error(f"Complete error in handle_post_request: {str(e)}")
+        logger.error(f"HAndle post reequest error: {str(e)}")
         logger.error(traceback.format_exc())
         return jsonify({
-            "error": "An unexpected error occurred",
-            "details": str(e)
+            "error": "An unexpected error occurred: {str(e)}" 
         }), 500
 
             
@@ -256,34 +260,44 @@ def calculate_and_save_emission(data, employee_count):
 
 def calculate_carbon_emission(data, employee_count):
 
-    total_carbon_emission_by_energy = (
-        (data['electric_bill'] * 12 * 0.0005) + 
-        (data['gas_bill'] * 12 * 0.0053) + 
-        (data['fuel_bill'] * 12 * 2.32)
-    )
+    try:
+        logger.info(f"calculating emmissions with data: {data}, employee_count: {employee_count}")
 
-    total_waste = data['waste_weight']
-    recycled_waste = total_waste * (data['recycled_val'] / 100)
-    non_recycled_waste = total_waste - recycled_waste
+        total_carbon_emission_by_energy = (
+            (float(data['electric_bill']) * 12 * 0.0005) + 
+            (float(data['gas_bill']) * 12 * 0.0053) + 
+            (float(data['fuel_bill']) * 12 * 2.32)
+        )
 
-    total_carbon_emission_by_waste = (total_waste - non_recycled_waste) * 12 * 0.57 
+        total_waste = data['waste_weight'] 
+        recycled_waste = (total_waste * data['recycled_val']) / 100
+        non_recycled_waste = total_waste - recycled_waste
 
-    total_carbon_emission_by_business = (
-        data['dist_traveled'] * employee_count * (1 / data['fuelef_avg']) * 2.31
-    )
+        total_carbon_emission_by_waste = (non_recycled_waste) * 12 * 0.57 
 
-    total_carbon_emission = (
-        total_carbon_emission_by_energy +
-        total_carbon_emission_by_waste +
-        total_carbon_emission_by_business
-    )
+        total_carbon_emission_by_business = (
+            float(data['dist_traveled']) * 
+            float(employee_count) * 
+            (1 / float(data['fuelef_avg'])) * 2.31
+        ) if float(data['fuelef_avg']) != 0 else 0
 
-    return {
-        'total_carbon_emission_by_energy': total_carbon_emission_by_energy,
-        'total_carbon_emission_by_waste': total_carbon_emission_by_waste,
-        'total_carbon_emission_by_business': total_carbon_emission_by_business,
-        'total_carbon_emission': total_carbon_emission
-    }
+        result = {
+            'total_carbon_emission_by_energy': total_carbon_emission_by_energy,
+            'total_carbon_emission_by_waste': total_carbon_emission_by_waste,
+            'total_carbon_emission_by_business': total_carbon_emission_by_business,
+            'total_carbon_emission': (
+                total_carbon_emission_by_energy +
+                total_carbon_emission_by_waste +
+                total_carbon_emission_by_business
+            )
+        }
+        
+        logger.info(f"Calculation result: {result}")
+        return result
+
+    except Exception as e:
+        logger.error(f"Error in calculate_carbon_emission: {str(e)}")
+        raise
 
 
 def save_carbon_data_to_db(total_carbon_emission):
@@ -300,30 +314,47 @@ def save_carbon_data_to_db(total_carbon_emission):
 def generate_emission_graph(carbon_emission_result):
 
     try:
-        plt.figure(figsize=(10, 6), facecolor='white')
-        labels = ['Energy Consumption', 'Waste Emission', 'Business Travel']
-        sizes = [
-            carbon_emission_result['total_carbon_emission_by_energy'],
-            carbon_emission_result['total_carbon_emission_by_waste'],
-            carbon_emission_result['total_carbon_emission_by_business']
+
+        logger.info(f"Generating graph with data: {carbon_emission_result}")
+
+        plt.figure(figsize=(8, 6), dpi=100)
+
+        values = [
+            max(0, carbon_emission_result['total_carbon_emission_by_energy']), 
+            max(0, carbon_emission_result['total_carbon_emission_by_waste']), 
+            max(0, carbon_emission_result['total_carbon_emission_by_business'])
         ]
-        colors = ['red', 'yellow', 'green']
 
-        plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
-        plt.axis('equal')
-        plt.title('Carbon emission breakdown', fontsize=15)
-        plt.tight_layout()
+        logger.info(f"plotting values: {values}")
 
+        if sum (values) == 0:
+            values = [0.1, 0.1, 0.1]
+
+        labels = ['Energy Consumption', 'Waste Emission', 'Business Travel']
+        colors = ['red', 'green', 'blue']
+
+        plt.pie(values, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
+        plt.title('Carbon Emission Distribution')
+       
         buffer = BytesIO()
-        plt.savefig(buffer, format='png', bbox_inches='tight', dpi=300)
+        plt.savefig(buffer, format='png', dpi=100)
         buffer.seek(0)
-        graph_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
-        plt.close()
 
-        return graph_base64
+        image_bytes = buffer.getvalue()
+        encoded = base64.b64encode(image_bytes)
+        image_base64 = encoded.decode('utf-8')
+        
+
+        buffer.close()
+        plt.clf()
+
+        logger.info("Succesfully generated graph")
+        return image_base64
+       
     except Exception as e:
-        print(f"Graph generation error: {e}")
+        logger.error(f"Error in generate_emission_graph: {str(e)}")
         return None
+
 
 
 @app.route('/')
