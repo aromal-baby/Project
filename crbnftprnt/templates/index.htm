@@ -20,8 +20,22 @@
     
     <div class="container2">
 
-        <p>Long paragraphs and images and a specific space for anything like account login or brief description in a big block around almost occupying half of the window.</p>
+        <br><br><p>Carbon footprint regulations in Europe aim to reduce greenhouse gas emissions and 
+            combat climate change by promoting sustainable practices across industries. The
+             European Union (EU) has implemented various legislative frameworks, such as the European 
+             Green Deal and the "Fit for 55" package, to achieve carbon neutrality by 2050. Key components
+              include the EU Emissions Trading System (EU ETS), which sets a cap on emissions and allows for 
+              trading carbon allowances, and the Carbon Border Adjustment Mechanism (CBAM), which prevents carbon 
+              leakage by imposing tariffs on imported goods based on their carbon footprint. Additionally, directives 
+              like the Renewable Energy Directive and the Energy Efficiency Directive encourage the adoption of clean energy 
+              and energy-saving technologies. Companies are required to report their carbon emissions under the Corporate Sustainability 
+              Reporting Directive (CSRD), while sectors like transportation and agriculture face specific emission reduction targets. Financial 
+              incentives, penalties, and subsidies for green initiatives further support compliance. These regulations reflect Europe’s 
+              commitment to global climate goals, driving innovation, and encouraging collaboration to create a low-carbon economy.
+        </p><br>
 
+        <h2 style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;"><center>Calculate your Carbon Footprint?</center></h2><br>
+        <center><button onclick="toggleLoginModal()">calculate</button></center>
     </div>
 
 
@@ -34,12 +48,11 @@
             </ul>
         </div>
 
-        <div id="block1">
-            <h2>BLAH</h2>
-        </div>
-
-        <div id="block2">
-            <h2>Blah</h2>
+        <div id="videoBlock">
+            <video id="carbonVideo" controls>
+                <source src="{{ url_for('static', filename='videos/your-video-name.mp4') }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
         </div>
 
         <div id="rightblock">
@@ -53,7 +66,12 @@
 
     <div class="container4">
         <div id="textblock1">
-            <p>Text block content here</p>
+            <h2>Simple & Accurate</h2><br>
+            <p>"Answer a few questions about your lifestyle, transportation, and energy usage to get<br> 
+                a detailed analysis of your carbon footprint. Discover personalized tips to reduce your impact on<br>
+                the environment and make sustainable choices. Track your progress over time and join a <br>
+                community committed to fighting climate change. Start your journey towards a greener future today!"
+            </p>
         </div>
         <div id="imgblock1">
         </div>
@@ -63,7 +81,15 @@
         <div id="imgblock2">
         </div>
         <div id="textblock2">
-            <p>Another text block content here</p>
+            <h2>Personalized Tips</h2>
+            <br><br>
+            <p>
+                Answer a few questions about your lifestyle, transportation, and energy usage to get a detailed <br>
+                analysis of your carbon footprint. Receive customized recommendations to <br>
+                reduce your environmental impact and track your progress over time. Discover personalized<br>
+                tips to make sustainable choices and join a community committed to fighting climate change. Start your<br>
+                  journey towards a greener and more sustainable future today!
+            </p>
         </div>
     </div>
 

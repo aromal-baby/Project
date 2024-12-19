@@ -1,5 +1,5 @@
 from crbnftprnt import app, db, logger
-from flask import render_template, request, redirect, url_for, jsonify
+from flask import render_template, request, redirect, url_for, jsonify, flash
 from flask_login import login_required, current_user, login_user, logout_user
 from crbnftprnt.models import User, CrbnData
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -7,7 +7,11 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from io import BytesIO
+from crbnftprnt.pdf_gen import CarbonFootprintReport
+from flask import send_file
 import os, re, traceback, base64, secrets
+
+
 
 def validate_password(password):
 
@@ -374,3 +378,35 @@ def register_form():
     return render_template('register.html')
 
 
+@app.route('/download-report', methods=['GET'])
+@login_required
+def download_report():
+    try:
+        carbon_data = CrbnData.query.filter_by(user_id=current_user.user_id).first()
+
+        if not carbon_data:
+            flash('No carbon dat found', 'error')
+            return redirect(url_for('main_cont'))
+        
+        graph_base64 = generate_emission_graph({
+            'total_carbon_emission_by_energy': carbon_data.electric_bill,
+            'total_carbon_emission_by_waste': carbon_data.waste_weight,
+            'total_carbon_emission_by_business': carbon_data.dist_traveled
+        })
+
+        report_data = {
+            'total_carbon_emission_by_energy': carbon_data.electric_bill,
+            'total_carbon_emission_by_waste': carbon_data.waste_weight,
+            'total_carbon_emission_by_business': carbon_data.dist_traveled,
+            'graph': graph_base64
+        }
+
+        report_generator = CarbonFootprintReport(current_user, report_data)
+        report_path = report_generator.generate_report()
+
+        return send_file(report_path, as_attachment=True)
+
+    except Exception as e:
+        logger.error(f"Error generating report: {str(e)}")
+        flash('Error generating report', 'error')
+        return redirect(url_for('main_cont'))

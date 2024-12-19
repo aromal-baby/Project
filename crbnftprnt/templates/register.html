@@ -13,12 +13,14 @@
             </div>
             <div id="registerPort">
                 <form action="/register" method="POST" onsubmit="event.preventDefault(); registerUser();">
-                    <label>
-                        <input type="radio" name="signup" value="PERSONAL" onclick="persSignup()" checked> Personal
-                    </label>
-                    <label>
-                        <input type="radio" name="signup" value="INSTITUTE" onclick="instSignup()"> Institute
-                    </label>
+                    <div class="radio-grp">
+                        <label>
+                            <input type="radio" name="signup" value="PERSONAL" onclick="persSignup()" checked> Personal
+                        </label>
+                        <label>
+                            <input type="radio" name="signup" value="INSTITUTE" onclick="instSignup()"> Institute
+                        </label>
+                    </div>
                     <br><br>
 
                     <div id="persdetails">

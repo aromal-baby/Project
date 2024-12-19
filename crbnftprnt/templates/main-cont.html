@@ -10,16 +10,29 @@
 
     <div id="calc-result">
         <div id="calc-graph">
-            <div id="calc-graph">
-                <!-- Default content when no data -->
-                <div class="default-graph-content">
-                    <img src="default-calc-graph.svg" alt="Default Graph" class="default-image">
-                    <p>Enter your data in the form below to calculate your carbon footprint</p>
+            
+            <div class="default-graph-content">
+                <div class="graph-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 13v-1m4 1v-3m4 3V8M12 21a9 9 0 110-18 9 9 0 010 18z"/>
+                    </svg>
                 </div>
+                <h3>Carbon Footprint Analysis</h3>
+                <p>Enter your data in the form below to calculate your carbon footprint</p>
             </div>
-            <p style="color: white; text-align: center;">No data to display yet. Please fill the form below.</p>
+            <div id="load-indicator" style="display: none;">
+                <div class="spinner"></div>
+                <p>Calculating your carbon footprint</p>
+            </div>
+
         </div>
+       
         <img id="carbon-graph" src="" alt="Carbon Emission Graph">
+        <div id="dwnld-btn">
+            <button onclick="window.location.href={{ url_for('download_report') }}">
+                Download PDF Report
+            </button>
+        </div>
         <div class="emission-details">
             <p>Energy Emission: <span id="energy-emission">0.00</span>kg CO2</p>
             <p>Waste Emission: <span id="waste-emission">0.00</span>kg CO2</p>

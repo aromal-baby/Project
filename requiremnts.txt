@@ -1,0 +1,8 @@
+flask
+bcrypt
+werkzeug
+flask_sqlalchemy
+flask_login
+matplotlib
+pandas
+reportlab

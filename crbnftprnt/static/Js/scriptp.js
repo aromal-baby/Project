@@ -1,18 +1,3 @@
-async function toggleLoginModal() {
-    const sidebar = document.querySelector('#sidebar-active');
-    const modal = document.querySelector('#loginModal');
-
-    if(sidebar){
-        sidebar.checked = false;
-    }
-
-    if (modal.style.display === 'flex' || getComputedStyle(modal).display === 'flex') { 
-        modal.style.display = 'none';
-    }
-    else{
-        modal.style.display = 'flex';
-    }
-}
 
 document.addEventListener("DOMContentLoaded", function() {
     const modal = document.querySelector('#loginModal');
@@ -23,23 +8,46 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     const urlParams = new URLSearchParams(window.location.search)
+
     if (urlParams.has('showLogin') && urlParams.get('showLogin') === 'true') {
-        toggleLoginModal();
-        alert('New user registered. Please login to continue.');
+        setTimeout(() => {
+            toggleLoginModal();
+
+            if (urlParams.has('formRegistration')) {
+                alert('New user registered. Please login to continue.');
+            }
+        }, 100);
+    }
+    else{
+        console.error("modal not found");
     }
 });
 
 
 function registerClose() {
-    // Close the registration modal
+   
     const registerModal = document.getElementById('registerModal');
     if (registerModal) {
         registerModal.style.display = 'none';
     }
-        // Redirect to the homepage
-        window.location.href = '/?showLogin=true';
-    
-    
+        window.location.href = '/?showLogin=true&fromRegistration=true';  
+}
+
+async function toggleLoginModal() {
+    const sidebar = document.querySelector('#sidebar-active');
+    const modal = document.querySelector('#loginModal');
+
+    if (!modal) {
+        console.error("Login modal not found");
+        return;
+    }
+
+    if (sidebar) {
+        sidebar.checked = false;
+    }
+
+    const currentDisplay = modal.style.display === 'flex' || getComputedStyle(modal).display === 'flex';
+    modal.style.display = currentDisplay ? 'none' : 'flex';
 }
 
 
@@ -101,7 +109,6 @@ async function registerUser() {
     };
 
 
-    // Additional fields for INSTITUTE type
     if (userType === 'INSTITUTE') {
         formData.postn = document.getElementById('postn')?.value.trim();
         formData.cmpny = document.getElementById('cmpny')?.value.trim();
@@ -204,6 +211,7 @@ async function calculate(event){
 
     const graphContainer = document.getElementById('calc-graph');
     const resultContainer = document.getElementById('calc-result');
+    const defaultContent = document.getElementById('default-mage');
     
     if(!graphContainer) {
         console.error("Graph container not found");
@@ -280,7 +288,16 @@ async function calculate(event){
     }
     catch (error) {
         console.error('Calculation error:', error);
-        graphContainer.innerHTML =`<p style="color: red;">Error: ${error.message}</p>`;
+        graphContainer.innerHTML = `
+       <div class="error-message">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12" y2="16" />
+                </svg>
+                <p>Error: ${error.message}</p>
+            </div>
+        `;
 
         if(defaultContent) {
             defaultContent.style.display = 'flex';
