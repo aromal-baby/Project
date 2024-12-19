@@ -1,5 +1,5 @@
 from crbnftprnt import app, db, logger
-from flask import render_template, request, redirect, url_for, jsonify, flash
+from flask import render_template, request, redirect, url_for, jsonify, flash, send_file
 from flask_login import login_required, current_user, login_user, logout_user
 from crbnftprnt.models import User, CrbnData
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -9,8 +9,7 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 from crbnftprnt.pdf_gen import CarbonFootprintReport
 from flask import send_file
-import os, re, traceback, base64, secrets
-
+import os, re, traceback, base64, secrets, logging
 
 
 def validate_password(password):
@@ -388,6 +387,10 @@ def download_report():
             flash('No carbon dat found', 'error')
             return redirect(url_for('main_cont'))
         
+        energy = float(carbon_data.electric_bill or 0)
+        waste = float(carbon_data.waste_weight or 0)
+        business = float(carbon_data.dist_traveled or 0)
+
         graph_base64 = generate_emission_graph({
             'total_carbon_emission_by_energy': carbon_data.electric_bill,
             'total_carbon_emission_by_waste': carbon_data.waste_weight,
@@ -395,18 +398,22 @@ def download_report():
         })
 
         report_data = {
-            'total_carbon_emission_by_energy': carbon_data.electric_bill,
-            'total_carbon_emission_by_waste': carbon_data.waste_weight,
-            'total_carbon_emission_by_business': carbon_data.dist_traveled,
+            'total_carbon_emission_by_energy': energy,
+            'total_carbon_emission_by_waste': waste,
+            'total_carbon_emission_by_business': business,
             'graph': graph_base64
         }
 
         report_generator = CarbonFootprintReport(current_user, report_data)
         report_path = report_generator.generate_report()
 
-        return send_file(report_path, as_attachment=True)
+        return send_file(report_path, 
+                    mimetype='application/pdf',   
+                    as_attachment=True,
+                    download_name=f'carbon_repor_{current_user.user_id}.pdf'
+                    )
 
     except Exception as e:
-        logger.error(f"Error generating report: {str(e)}")
+        logger.error(f"Error generating report: {str(e)}", exc_info=True)
         flash('Error generating report', 'error')
         return redirect(url_for('main_cont'))

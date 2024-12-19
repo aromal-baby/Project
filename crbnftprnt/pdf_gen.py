@@ -151,10 +151,18 @@ def _add_emission_summary(self):
     elements = []
 
     total_emissions = (
-        self.data['total_carbon_emission_by_energy']+
-        self.data['total_carbon_emission_by_waste']+
+        self.data['total_carbon_emission_by_energy'] +
+        self.data['total_carbon_emission_by_waste'] +
         self.data['total_carbon_emission_by_business']
     )
+
+    if total_emissions == 0:
+        percentage_energy = percentage_waste = percentage_business = 0
+    else:
+        percentage_energy = (self.data['total_carbon_emission_by_energy']/total_emissions*100)
+        percentage_waste = (self.data['total_carbon_emission_by_waste']/total_emissions*100)
+        percentage_business = (self.data['total_carbon_emission_by_business']/total_emissions*100)
+
 
     summary_data = [
         ["Category", "Emissions (kgCO2)", "Percentage"],

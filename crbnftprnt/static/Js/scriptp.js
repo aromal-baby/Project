@@ -311,3 +311,65 @@ function handleFormSubmit(event) {
     calculate(event);
 }
 
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const calcResult = document.getElementById('calc-result');
+    const carbonGraph = document.getElementById('carbon-graph');
+    const downloadBtn = document.getElementById('dwnld-btn');
+
+   
+    function showLoading() {
+        const loadIndicator = document.createElement('div');
+        loadIndicator.id = 'load-indicator';
+        loadIndicator.innerHTML = `
+            <div class="spinner"></div>
+            <p>Generating results...</p>
+        `;
+        calcResult.appendChild(loadIndicator);
+    }
+
+    function hideLoading() {
+        const loadIndicator = document.getElementById('load-indicator');
+        if (loadIndicator) {
+            loadIndicator.remove();
+        }
+    }
+
+    if (downloadBtn) {
+        downloadBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+            </svg>
+            Download Report
+        `;
+
+        downloadBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            downloadBtn.disabled = true;
+            downloadBtn.innerHTML = `
+                <div class="spinner"></div>
+                Preparing Download...
+            `;
+
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate download
+
+                downloadBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                    </svg>
+                    Download Report
+                `;
+            } finally {
+                downloadBtn.disabled = false;
+            }
+        });
+    }
+
+    if (carbonGraph) {
+        carbonGraph.addEventListener('load', function() {
+            this.classList.add('fade-in');
+        });
+    }
+});
